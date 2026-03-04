@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Public tunnel URL (localtunnel) — update this if tunnel restarts
-const API_BASE = import.meta.env.VITE_API_URL || "https://cruel-pots-do.loca.lt";
+const API_BASE = import.meta.env.VITE_API_URL || "https://fast-pans-slide.loca.lt";
 
 export const api = axios.create({
   baseURL: API_BASE
