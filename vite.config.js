@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    allowedHosts: true,    // allow localtunnel / ngrok public URLs
     proxy: {
       // Optional: proxy API calls during dev to avoid CORS issues
       // "/api": { target: "http://localhost:4000", rewrite: (p) => p.replace(/^\/api/, "") }
