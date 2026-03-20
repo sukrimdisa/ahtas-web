@@ -14,15 +14,18 @@ import { LogOut, Stethoscope, CalendarClock, Shield, CalendarCheck } from "lucid
 
 // ── Layout wrapper with sticky nav ────────────────────────────────────────────
 function Layout({ children }) {
-  const [me,  setMe]  = useState(null);
+  const [me, setMe] = useState(null);
   const nav = useNavigate();
 
-  const loadMe = async () => {
-    try {
-      const { data } = await api.get("/auth/me");
-      setMe(data);
-    } catch {
-      setMe(null);
+  const loadMe = () => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (token && user) {
+      try {
+        setMe(JSON.parse(user));
+      } catch {
+        setMe(null);
+      }
     }
   };
 
@@ -30,6 +33,7 @@ function Layout({ children }) {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setMe(null);
     nav("/login");
   };
@@ -44,8 +48,8 @@ function Layout({ children }) {
       {/* ── Top bar ── */}
       <div className="topbar">
         <div className="nav">
-          <Link to="/" style={{ fontWeight: 900, fontSize: "1rem", letterSpacing: ".02em" }}>
-            🌿 AHTAS
+          <Link to="/" style={{ fontWeight: 900, fontSize: "1.1rem", letterSpacing: ".02em", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            🌿 AHTAS PRO
           </Link>
 
           <Link to="/">Booking</Link>
@@ -57,7 +61,7 @@ function Layout({ children }) {
             {me ? (
               <>
                 <span className="badge blue">
-                  {roleIcon} {me.email} · {me.role}
+                  {roleIcon} {me.name || me.email} · {me.role}
                 </span>
                 <button className="btn" onClick={logout}>
                   <LogOut size={15} /> Logout
