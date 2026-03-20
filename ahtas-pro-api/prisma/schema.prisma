@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  THERAPIST
+  CUSTOMER
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role
+  phone        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  therapist    Therapist?
+  appointments Appointment[]
+}
+
+model Therapist {
+  id           String                @id @default(uuid())
+  userId       String                @unique
+  user         User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commission   Float                 @default(0.7)
+  bio          String?
+  imageUrl     String?
+  isActive     Boolean               @default(true)
+  createdAt    DateTime              @default(now())
+  
+  services     TherapistService[]
+  availability Availability[]
+  appointments Appointment[]
+}
+
+model Service {
+  id          String             @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  duration    Int                // minutes
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  
+  therapists  TherapistService[]
+  appointments Appointment[]
+}
+
+model TherapistService {
+  therapistId String
+  serviceId   String
+  therapist   Therapist @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  service     Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([therapistId, serviceId])
+}
+
+model Availability {
+  id          String    @id @default(uuid())
+  therapistId String
+  date        DateTime  @db.Date
+  startTime   String    // "09:00"
+  endTime     String    // "17:00"
+  isAvailable Boolean   @default(true)
+  therapist   Therapist @relation(fields: [therapistId], references: [id], onDelete: Cascade)
+  
+  @@unique([therapistId, date])
+}
+
+model Appointment {
+  id              String    @id @default(uuid())
+  bookingRef      String    @unique
+  customerId      String
+  therapistId     String
+  serviceId       String
+  
+  startDt         DateTime
+  endDt           DateTime
+  
+  totalAmount     Float
+  therapistIncome Float
+  
+  status          String    @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  paymentStatus   String    @default("UNPAID")  // UNPAID, PAID, REFUNDED
+  
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  customer  User      @relation(fields: [customerId], references: [id])
+  therapist Therapist @relation(fields: [therapistId], references: [id])
+  service   Service   @relation(fields: [serviceId], references: [id])
+  
+  @@index([therapistId, startDt])
+  @@index([customerId])
+}

@@ -1,0 +1,35 @@
+{
+  "name": "ahtas-pro-api",
+  "version": "1.0.0",
+  "description": "AHTAS PRO - Production Spa & Therapy Booking System",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "seed": "node prisma/seed.js"
+  },
+  "keywords": [
+    "spa",
+    "booking",
+    "therapy",
+    "ahtas"
+  ],
+  "author": "Yot Therapy",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^7.5.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "googleapis": "^171.4.0",
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^8.0.3",
+    "prisma": "^7.5.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
