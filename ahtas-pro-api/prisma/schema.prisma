@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  THERAPIST
+  CUSTOMER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  therapist Therapist?
+  appointments Appointment[]
+}
+
+model Therapist {
+  id          String @id @default(uuid())
+  userId      String @unique
+  user        User   @relation(fields: [userId], references: [id])
+  commission  Float  @default(0.7)
+  services    TherapistService[]
+  availability Availability[]
+  appointments Appointment[]
+}
+
+model Service {
+  id    String @id @default(uuid())
+  name  String
+  price Float
+  duration Int
+  therapists TherapistService[]
+  appointments Appointment[]
+}
+
+model TherapistService {
+  therapistId String
+  serviceId   String
+  therapist Therapist @relation(fields: [therapistId], references: [id])
+  service   Service   @relation(fields: [serviceId], references: [id])
+
+  @@id([therapistId, serviceId])
+}
+
+model Availability {
+  id           String @id @default(uuid())
+  therapistId  String
+  date         DateTime
+  startTime    String
+  endTime      String
+  therapist    Therapist @relation(fields: [therapistId], references: [id])
+}
+
+model Appointment {
+  id          String   @id @default(uuid())
+  bookingRef  String   @unique
+  customerId  String
+  therapistId String
+  serviceId   String
+  startDt     DateTime
+  totalAmount Float
+  therapistIncome Float
+  status      String
+  paymentStatus String
+
+  customer  User @relation(fields: [customerId], references: [id])
+  therapist Therapist @relation(fields: [therapistId], references: [id])
+  service   Service @relation(fields: [serviceId], references: [id])
+}
