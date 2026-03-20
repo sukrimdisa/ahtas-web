@@ -1,70 +1,100 @@
-# AHTAS Web — Frontend
+# AHTAS PRO - Spa & Therapy Management System
 
-React + Vite + lucide-react premium dark-theme UI for the AHTAS Therapy Booking System.
+Production-grade spa booking system with multi-therapist scheduling, commission tracking, and premium UI.
+
+## Project Structure
+
+```
+├── ahtas-pro-api/     # Backend (Node.js + Express + Prisma)
+├── ahtas-pro-web/     # Frontend (React + Vite)
+└── ahtas-web/         # Original AHTAS booking system
+```
 
 ## Quick Start
 
-### Prerequisites
-- Node.js v20 LTS — https://nodejs.org/en/download
-- Backend (`ahtas-api`) must be running on http://localhost:4000
-
-### Install & run
+### Backend
 ```bash
-cd ahtas-web
+cd ahtas-pro-api
+npm install
+cp .env.example .env  # Configure your database
+npx prisma migrate dev --name init
+npx prisma db seed
+npm run dev
+```
+
+### Frontend
+```bash
+cd ahtas-pro-web
 npm install
 npm run dev
 ```
-Frontend runs at: **http://localhost:5173**
-
----
-
-## Pages & Routes
-
-| Route             | Page                | Who uses it          |
-|-------------------|---------------------|----------------------|
-| `/`               | Booking Calendar    | Customer             |
-| `/therapist`      | Therapist Day View  | Therapist            |
-| `/therapist-week` | Therapist Week View | Therapist            |
-| `/admin`          | Admin Dashboard     | Admin                |
-| `/login`          | Login               | All                  |
-
----
 
 ## Features
 
-### Booking Calendar (`/`)
-- Select service → therapist → date
-- Full slot grid (green = available, grey = unavailable)
-- Auto-refresh every 15 seconds
-- Confirm booking → auto room allocation
-- Shows suggested slots on conflict
-
-### Therapist Day View (`/therapist`)
-- Shows all appointments for selected date
-- Colour-coded status badges (BOOKED, CONFIRMED, COMPLETED, NO_SHOW)
-- Real-time refresh every 15s
-
-### Therapist Week View (`/therapist-week`)
-- Mon–Sun 7-column grid
-- Navigate prev/next week
-- Today column highlighted in blue
-- Real-time refresh every 15s
-
-### Admin Dashboard (`/admin`)
-- Date range picker
-- Total bookings count
-- No-show rate (colour-coded: green/amber/red)
-- Utilisation % with animated progress bar
-- Booked minutes vs available minutes
-
----
+- Multi-therapist scheduling
+- Commission auto-calculation (70%)
+- Online booking with slot selection
+- Email confirmation
+- Google Sheets backup
+- Admin dashboard with analytics
+- Therapist income tracking
+- JWT authentication
+- Premium spa UI design
 
 ## Tech Stack
 
-| Package          | Purpose                    |
-|------------------|----------------------------|
-| React 18         | UI framework               |
-| Vite 5           | Build tool & dev server    |
-| react-router-dom | Client-side routing        |
-| axios            | HTTP client                |
-| lucide-react     | Icon library               |
+- Frontend: React + Vite
+- Backend: Node.js + Express
+- Database: PostgreSQL + Prisma
+- Email: Nodemailer
+- Backup: Google Sheets API
+
+## Environment Variables
+
+Create `.env` in `ahtas-pro-api/`:
+
+```
+DATABASE_URL=postgresql://...
+JWT_SECRET=your-secret-key
+PORT=4000
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USER=your@email.com
+MAIL_PASS=app-password
+MAIL_FROM=AHTAS <noreply@ahtas.my>
+GOOGLE_SERVICE_ACCOUNT_EMAIL=...
+GOOGLE_PRIVATE_KEY=...
+GOOGLE_SPREADSHEET_ID=...
+```
+
+## API Endpoints
+
+### Auth
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Login
+- `GET /api/auth/me` - Get current user
+
+### Booking
+- `GET /api/services` - List services
+- `POST /api/book` - Create booking
+- `GET /api/appointments` - List appointments
+- `GET /api/appointments/:ref` - Get by reference
+
+### Therapist
+- `GET /api/therapists` - List therapists
+- `GET /api/therapists/:id` - Get therapist details
+- `GET /api/therapists/:id/income` - Get income report
+
+### Admin
+- `GET /api/admin/dashboard` - Dashboard stats
+- `GET /api/admin/analytics` - Analytics data
+
+## Future Enhancements
+
+- Payment gateway (FPX/Stripe)
+- WhatsApp reminder
+- Multi-branch support
+- Staff payroll
+- Customer loyalty
+- Package memberships
+- AI scheduling optimization

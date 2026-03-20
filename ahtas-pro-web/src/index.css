@@ -1,0 +1,36 @@
+:root {
+  --primary: #8B7355;
+  --primary-dark: #6B5A47;
+  --accent: #C9A96E;
+  --bg: #FAF8F5;
+  --card: #FFFFFF;
+  --text: #2D3748;
+  --text-light: #718096;
+  --border: #E8E4E0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input, select {
+  font-family: inherit;
+}
